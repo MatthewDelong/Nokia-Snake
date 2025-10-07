@@ -115,7 +115,6 @@ canvas {
     background: #83d46c;
     border: none;
     padding: 20px;
-    font-size: 24px;
     border-radius: 50%;
     cursor: pointer;
     width: 70px;
@@ -123,24 +122,17 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    color: black; /* For SVG fill */
+}
+
+.control-btn svg {
+    width: 24px;
+    height: 24px;
 }
 
 .control-btn:active {
     background: #9ae285;
     transform: scale(0.95);
-}
-#upBtn {
-  grid-area: up;
-}
-#leftBtn {
-  grid-area: left;
-}
-#downBtn {
-  grid-area: down;
-}
-#rightBtn {
-  grid-area: right;
 }
 .instructions {
   font-size: clamp(12px, 4vw, 14px);
