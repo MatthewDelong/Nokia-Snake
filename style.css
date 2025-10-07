@@ -1,138 +1,153 @@
 * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            touch-action: manipulation;
-        }
-        body {
-            margin: 0;
-            padding: 10px;
-            background: #1a1a2e;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        .container {
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-            padding-bottom: 20px;
-        }
-        h1 {
-            font-size: clamp(24px, 8vw, 36px);
-            margin-bottom: 10px;
-            color: #83d46c;
-        }
-        .score-display {
-            display: flex;
-            justify-content: space-between;
-            font-size: clamp(18px, 6vw, 24px);
-            margin-bottom: 10px;
-            font-weight: bold;
-            width: 100%;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        canvas {
-            border: 2px solid #83d46c;
-            background: #0f1123;
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        #startScreen, #gameOver {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.95);
-            padding: 30px;
-            border-radius: 10px;
-            border: 2px solid #83d46c;
-            width: 80%;
-            max-width: 300px;
-            text-align: center;
-        }
-        #gameOver {
-            border: 2px solid #ff4444;
-        }
-        #startBtn, #restartBtn {
-            background: #83d46c;
-            border: none;
-            padding: 15px 25px;
-            font-size: clamp(16px, 5vw, 20px);
-            border-radius: 10px;
-            cursor: pointer;
-            color: black;
-            font-weight: bold;
-            margin-top: 15px;
-            width: 100%;
-        }
-        #resetScoreBtn {
-            background: #ff6b6b;
-            border: none;
-            padding: 8px 16px;
-            font-size: clamp(12px, 4vw, 14px);
-            border-radius: 6px;
-            cursor: pointer;
-            color: black;
-            font-weight: bold;
-            margin-top: 10px;
-            width: 80%;
-        }
-        #startBtn:hover, #restartBtn:hover {
-            background: #9ae285;
-        }
-        #resetScoreBtn:hover {
-            background: #ff8e8e;
-        }
-        .controls {
-            display: grid;
-            grid-template-areas: 
-                ". up ."
-                "left down right";
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            max-width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .control-btn {
-            background: #83d46c;
-            border: none;
-            padding: 20px;
-            font-size: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .control-btn:active {
-            background: #9ae285;
-            transform: scale(0.95);
-        }
-        #upBtn { grid-area: up; }
-        #leftBtn { grid-area: left; }
-        #downBtn { grid-area: down; }
-        #rightBtn { grid-area: right; }
-        .instructions {
-            font-size: clamp(12px, 4vw, 14px);
-            margin-top: 10px;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-        .hidden {
-            display: none;
-        }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+body {
+  margin: 0;
+  padding: 10px;
+  background: #1a1a2e;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  padding-bottom: 20px;
+}
+h1 {
+  font-size: clamp(24px, 8vw, 36px);
+  margin-bottom: 10px;
+  color: #83d46c;
+}
+.score-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: clamp(18px, 6vw, 24px);
+  margin-bottom: 10px;
+  font-weight: bold;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+canvas {
+  border: 2px solid #83d46c;
+  background: #0f1123;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+#startScreen,
+#gameOver {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.95);
+  padding: 30px;
+  border-radius: 10px;
+  border: 2px solid #83d46c;
+  width: 80%;
+  max-width: 300px;
+  text-align: center;
+}
+#gameOver {
+  border: 2px solid #ff4444;
+}
+#startBtn,
+#restartBtn {
+  background: #83d46c;
+  border: none;
+  padding: 15px 25px;
+  font-size: clamp(16px, 5vw, 20px);
+  border-radius: 10px;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+  margin-top: 15px;
+  width: 100%;
+}
+#resetScoreBtn {
+  background: #ff6b6b;
+  border: none;
+  padding: 8px 16px;
+  font-size: clamp(12px, 4vw, 14px);
+  border-radius: 6px;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 80%;
+}
+#startBtn:hover,
+#restartBtn:hover {
+  background: #9ae285;
+}
+#resetScoreBtn:hover {
+  background: #ff8e8e;
+}
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.control-row {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.control-btn {
+    background: #83d46c;
+    border: none;
+    padding: 20px;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.control-btn:active {
+    background: #9ae285;
+    transform: scale(0.95);
+}
+#upBtn {
+  grid-area: up;
+}
+#leftBtn {
+  grid-area: left;
+}
+#downBtn {
+  grid-area: down;
+}
+#rightBtn {
+  grid-area: right;
+}
+.instructions {
+  font-size: clamp(12px, 4vw, 14px);
+  margin-top: 10px;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+.hidden {
+  display: none;
+}

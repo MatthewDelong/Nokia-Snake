@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -8,6 +9,7 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
     <div class="container">
         <h1>NOKIA SNAKE</h1>
@@ -16,25 +18,29 @@
             <div>High Score: <span id="highScore">0</span></div>
         </div>
         <canvas id="gameCanvas"></canvas>
-        
+
         <div class="controls">
-            <button id="upBtn" class="control-btn">↑</button>
-            <button id="leftBtn" class="control-btn">←</button>
-            <button id="downBtn" class="control-btn">↓</button>
-            <button id="rightBtn" class="control-btn">→</button>
+            <div class="control-row">
+                <button id="upBtn" class="control-btn">↑</button>
+            </div>
+            <div class="control-row">
+                <button id="leftBtn" class="control-btn">←</button>
+                <button id="downBtn" class="control-btn">↓</button>
+                <button id="rightBtn" class="control-btn">→</button>
+            </div>
         </div>
-        
+
         <div class="instructions">
             <p>Use arrow keys or touch buttons</p>
         </div>
-        
+
         <div id="startScreen">
             <h2>READY TO PLAY?</h2>
             <p>Eat the red food to grow!</p>
             <button id="startBtn">START GAME</button>
             <button id="resetScoreBtn">RESET HIGH SCORE</button>
         </div>
-        
+
         <div id="gameOver" class="hidden">
             <h2>GAME OVER</h2>
             <p>Final Score: <span id="finalScore">0</span></p>
@@ -43,4 +49,5 @@
     </div>
     <script src="game.js"></script>
 </body>
+
 </html>
