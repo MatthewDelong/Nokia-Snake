@@ -6,6 +6,7 @@ const finalScoreElement = document.getElementById('finalScore');
 const restartBtn = document.getElementById('restartBtn');
 const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
+const resetScoreBtn = document.getElementById('resetScoreBtn');
 
 // Set canvas size based on device
 function setCanvasSize() {
@@ -22,7 +23,7 @@ let snake = [];
 let food = {};
 let direction = { x: 0, y: 0 };
 let score = 0;
-let gameRunning = false; // Start as false - game doesn't auto-start
+let gameRunning = false;
 let highScore = 0;
 
 // Load high score from localStorage
@@ -35,6 +36,16 @@ function loadHighScore() {
 // Save high score to localStorage
 function saveHighScore() {
     localStorage.setItem('nokiaSnakeHighScore', highScore);
+}
+
+// Reset high score
+function resetHighScore() {
+    if (confirm('Are you sure you want to reset the high score?')) {
+        highScore = 0;
+        localStorage.removeItem('nokiaSnakeHighScore');
+        updateHighScoreDisplay();
+        alert('High score has been reset to 0!');
+    }
 }
 
 // Update high score display
@@ -191,6 +202,9 @@ function changeDirection(newDirection) {
 
 // Start button
 startBtn.addEventListener('click', startGame);
+
+// Reset high score button
+resetScoreBtn.addEventListener('click', resetHighScore);
 
 // Keyboard controls
 document.addEventListener('keydown', (e) => {
