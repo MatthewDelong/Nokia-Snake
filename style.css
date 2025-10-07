@@ -97,42 +97,42 @@ canvas {
   background: #ff8e8e;
 }
 .controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-top: 20px;
-    margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .control-row {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
 }
 
 .control-btn {
-    background: #83d46c;
-    border: none;
-    padding: 20px;
-    border-radius: 50%;
-    cursor: pointer;
-    width: 70px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: black; /* For SVG fill */
+  background: #83d46c;
+  border: none;
+  padding: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black; /* For SVG fill */
 }
 
 .control-btn svg {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .control-btn:active {
-    background: #9ae285;
-    transform: scale(0.95);
+  background: #9ae285;
+  transform: scale(0.95);
 }
 .instructions {
   font-size: clamp(12px, 4vw, 14px);
