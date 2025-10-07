@@ -4,135 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Nokia Snake Game</title>
-    <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        touch-action: manipulation;
-    }
-    body {
-        margin: 0;
-        padding: 10px;
-        background: #1a1a2e;
-        color: white;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        overflow: hidden;
-    }
-    .container {
-        text-align: center;
-        width: 100%;
-        max-width: 500px;
-        padding-bottom: 20px; /* Added bottom padding */
-    }
-    h1 {
-        font-size: clamp(24px, 8vw, 36px);
-        margin-bottom: 10px;
-        color: #83d46c;
-    }
-    .score {
-        font-size: clamp(18px, 6vw, 24px);
-        margin-bottom: 10px;
-        font-weight: bold;
-    }
-    canvas {
-        border: 2px solid #83d46c;
-        background: #0f1123;
-        width: 100%;
-        max-width: 400px;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
-    .score-display {
-    display: flex;
-    justify-content: space-between;
-    font-size: clamp(18px, 6vw, 24px);
-    margin-bottom: 10px;
-    font-weight: bold;
-    width: 100%;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-}
-    #gameOver {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.95);
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #ff4444;
-        width: 80%;
-        max-width: 300px;
-    }
-    #restartBtn {
-        background: #83d46c;
-        border: none;
-        padding: 15px 25px;
-        font-size: clamp(16px, 5vw, 20px);
-        border-radius: 10px;
-        cursor: pointer;
-        color: black;
-        font-weight: bold;
-        margin-top: 15px;
-        width: 100%;
-    }
-    .controls {
-        display: grid;
-        grid-template-areas: 
-            ". up ."
-            "left down right";
-        gap: 10px;
-        justify-content: center;
-        margin-top: 20px;
-        margin-bottom: 30px; /* Added bottom margin */
-        max-width: 200px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .control-btn {
-        background: #83d46c;
-        border: none;
-        padding: 20px;
-        font-size: 24px;
-        border-radius: 50%;
-        cursor: pointer;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .control-btn:active {
-        background: #9ae285;
-        transform: scale(0.95);
-    }
-    #upBtn { grid-area: up; }
-    #leftBtn { grid-area: left; }
-    #downBtn { grid-area: down; }
-    #rightBtn { grid-area: right; }
-    .instructions {
-        font-size: clamp(12px, 4vw, 14px);
-        margin-top: 10px;
-        margin-bottom: 20px; /* Added bottom margin */
-        opacity: 0.8;
-    }
-</style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>NOKIA SNAKE</h1>
         <div class="score-display">
-    <div>Score: <span id="score">0</span></div>
-    <div>High Score: <span id="highScore">0</span></div>
-</div>
+            <div>Score: <span id="score">0</span></div>
+            <div>High Score: <span id="highScore">0</span></div>
+        </div>
         <canvas id="gameCanvas"></canvas>
         
         <div class="controls">
@@ -146,7 +26,13 @@
             <p>Use arrow keys or touch buttons</p>
         </div>
         
-        <div id="gameOver">
+        <div id="startScreen">
+            <h2>READY TO PLAY?</h2>
+            <p>Eat the red food to grow!</p>
+            <button id="startBtn">START GAME</button>
+        </div>
+        
+        <div id="gameOver" class="hidden">
             <h2>GAME OVER</h2>
             <p>Final Score: <span id="finalScore">0</span></p>
             <button id="restartBtn">PLAY AGAIN</button>

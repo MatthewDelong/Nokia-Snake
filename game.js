@@ -4,6 +4,8 @@ const scoreElement = document.getElementById('score');
 const gameOverElement = document.getElementById('gameOver');
 const finalScoreElement = document.getElementById('finalScore');
 const restartBtn = document.getElementById('restartBtn');
+const startScreen = document.getElementById('startScreen');
+const startBtn = document.getElementById('startBtn');
 
 // Set canvas size based on device
 function setCanvasSize() {
@@ -20,7 +22,7 @@ let snake = [];
 let food = {};
 let direction = { x: 0, y: 0 };
 let score = 0;
-let gameRunning = true;
+let gameRunning = false; // Start as false - game doesn't auto-start
 let highScore = 0;
 
 // Load high score from localStorage
@@ -63,7 +65,8 @@ function initGame() {
     
     // Update display
     scoreElement.textContent = score;
-    gameOverElement.style.display = 'none';
+    gameOverElement.classList.add('hidden');
+    startScreen.classList.add('hidden');
 }
 
 function createFood() {
@@ -150,6 +153,11 @@ function draw() {
     ctx.fillRect(foodX, foodY, foodSize, foodSize);
 }
 
+function startGame() {
+    initGame();
+    gameLoop();
+}
+
 function endGame() {
     gameRunning = false;
     finalScoreElement.textContent = score;
@@ -161,7 +169,7 @@ function endGame() {
         updateHighScoreDisplay();
     }
     
-    gameOverElement.style.display = 'block';
+    gameOverElement.classList.remove('hidden');
 }
 
 function changeDirection(newDirection) {
@@ -180,6 +188,9 @@ function changeDirection(newDirection) {
         direction = dir;
     }
 }
+
+// Start button
+startBtn.addEventListener('click', startGame);
 
 // Keyboard controls
 document.addEventListener('keydown', (e) => {
@@ -204,13 +215,15 @@ let touchStartX = 0;
 let touchStartY = 0;
 
 canvas.addEventListener('touchstart', (e) => {
+    if (!gameRunning) return;
+    
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
     e.preventDefault();
 });
 
 canvas.addEventListener('touchend', (e) => {
-    if (!touchStartX || !touchStartY) return;
+    if (!gameRunning || !touchStartX || !touchStartY) return;
     
     const touchEndX = e.changedTouches[0].clientX;
     const touchEndY = e.changedTouches[0].clientY;
@@ -240,17 +253,26 @@ canvas.addEventListener('touchend', (e) => {
 });
 
 // Restart button
-restartBtn.addEventListener('click', () => {
-    initGame();
-    gameLoop();
-});
+restartBtn.addEventListener('click', startGame);
 
 // Handle window resize
-window.addEventListener('resize', initGame);
+window.addEventListener('resize', () => {
+    if (gameRunning) {
+        setCanvasSize();
+        tileCount = canvas.width / gridSize;
+    }
+});
 
 // Load high score when game starts
 loadHighScore();
 
-// Start the game
-initGame();
-gameLoop();
+// Initialize but don't start the game
+setCanvasSize();
+tileCount = canvas.width / gridSize;
+snake = [
+    { x: Math.floor(tileCount/2), y: Math.floor(tileCount/2) },
+    { x: Math.floor(tileCount/2)-1, y: Math.floor(tileCount/2) },
+    { x: Math.floor(tileCount/2)-2, y: Math.floor(tileCount/2) }
+];
+createFood();
+draw(); // Draw initial state
