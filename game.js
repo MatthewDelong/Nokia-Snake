@@ -5,8 +5,15 @@ const gameOverElement = document.getElementById('gameOver');
 const finalScoreElement = document.getElementById('finalScore');
 const restartBtn = document.getElementById('restartBtn');
 
+// Set canvas size based on device
+function setCanvasSize() {
+    const maxSize = Math.min(window.innerWidth - 40, 400);
+    canvas.width = maxSize;
+    canvas.height = maxSize;
+}
+
 const gridSize = 20;
-const tileCount = canvas.width / gridSize;
+let tileCount;
 
 let snake = [];
 let food = {};
@@ -15,18 +22,17 @@ let score = 0;
 let gameRunning = true;
 
 function initGame() {
+    setCanvasSize();
+    tileCount = canvas.width / gridSize;
+    
     // Initialize snake
     snake = [
-        { x: 10, y: 10 },
-        { x: 9, y: 10 },
-        { x: 8, y: 10 }
+        { x: Math.floor(tileCount/2), y: Math.floor(tileCount/2) },
+        { x: Math.floor(tileCount/2)-1, y: Math.floor(tileCount/2) },
+        { x: Math.floor(tileCount/2)-2, y: Math.floor(tileCount/2) }
     ];
     
-    // Create first food
-    food = {
-        x: Math.floor(Math.random() * tileCount),
-        y: Math.floor(Math.random() * tileCount)
-    };
+    createFood();
     
     // Reset game state
     direction = { x: 1, y: 0 };
@@ -38,12 +44,27 @@ function initGame() {
     gameOverElement.style.display = 'none';
 }
 
+function createFood() {
+    food = {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount)
+    };
+    
+    // Make sure food doesn't spawn on snake
+    while (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+        food = {
+            x: Math.floor(Math.random() * tileCount),
+            y: Math.floor(Math.random() * tileCount)
+        };
+    }
+}
+
 function gameLoop() {
     if (!gameRunning) return;
     
     update();
     draw();
-    setTimeout(gameLoop, 100);
+    setTimeout(gameLoop, 150); // Slightly slower for mobile
 }
 
 function update() {
@@ -70,10 +91,7 @@ function update() {
     if (head.x === food.x && head.y === food.y) {
         score += 10;
         scoreElement.textContent = score;
-        food = {
-            x: Math.floor(Math.random() * tileCount),
-            y: Math.floor(Math.random() * tileCount)
-        };
+        createFood();
     } else {
         snake.pop();
     }
@@ -84,15 +102,18 @@ function draw() {
     ctx.fillStyle = '#0f1123';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw snake
+    // Draw snake with responsive size
+    const cellSize = canvas.width / tileCount;
     ctx.fillStyle = '#83d46c';
-    snake.forEach(segment => {
-        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+    snake.forEach((segment, index) => {
+        const size = cellSize - 2;
+        ctx.fillRect(segment.x * cellSize, segment.y * cellSize, size, size);
     });
     
     // Draw food
     ctx.fillStyle = '#ff4444';
-    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+    const foodSize = cellSize - 2;
+    ctx.fillRect(food.x * cellSize, food.y * cellSize, foodSize, foodSize);
 }
 
 function endGame() {
@@ -101,24 +122,79 @@ function endGame() {
     gameOverElement.style.display = 'block';
 }
 
-// Controls
+function changeDirection(newDirection) {
+    if (!gameRunning) return;
+    
+    const directions = {
+        up: { x: 0, y: -1 },
+        down: { x: 0, y: 1 },
+        left: { x: -1, y: 0 },
+        right: { x: 1, y: 0 }
+    };
+    
+    const dir = directions[newDirection];
+    // Prevent 180-degree turns
+    if (dir.x !== -direction.x && dir.y !== -direction.y) {
+        direction = dir;
+    }
+}
+
+// Keyboard controls
 document.addEventListener('keydown', (e) => {
     if (!gameRunning) return;
     
     switch(e.key) {
-        case 'ArrowUp': 
-            if (direction.y !== 1) direction = { x: 0, y: -1 }; 
-            break;
-        case 'ArrowDown': 
-            if (direction.y !== -1) direction = { x: 0, y: 1 }; 
-            break;
-        case 'ArrowLeft': 
-            if (direction.x !== 1) direction = { x: -1, y: 0 }; 
-            break;
-        case 'ArrowRight': 
-            if (direction.x !== -1) direction = { x: 1, y: 0 }; 
-            break;
+        case 'ArrowUp': changeDirection('up'); break;
+        case 'ArrowDown': changeDirection('down'); break;
+        case 'ArrowLeft': changeDirection('left'); break;
+        case 'ArrowRight': changeDirection('right'); break;
     }
+});
+
+// Touch controls for buttons
+document.getElementById('upBtn').addEventListener('click', () => changeDirection('up'));
+document.getElementById('downBtn').addEventListener('click', () => changeDirection('down'));
+document.getElementById('leftBtn').addEventListener('click', () => changeDirection('left'));
+document.getElementById('rightBtn').addEventListener('click', () => changeDirection('right'));
+
+// Swipe controls for touch screens
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    e.preventDefault();
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    if (!touchStartX || !touchStartY) return;
+    
+    const touchEndX = e.touches[0].clientX;
+    const touchEndY = e.touches[0].clientY;
+    
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Horizontal swipe
+        if (diffX > 0) {
+            changeDirection('left');
+        } else {
+            changeDirection('right');
+        }
+    } else {
+        // Vertical swipe
+        if (diffY > 0) {
+            changeDirection('up');
+        } else {
+            changeDirection('down');
+        }
+    }
+    
+    touchStartX = null;
+    touchStartY = null;
+    e.preventDefault();
 });
 
 // Restart button
@@ -126,6 +202,9 @@ restartBtn.addEventListener('click', () => {
     initGame();
     gameLoop();
 });
+
+// Handle window resize
+window.addEventListener('resize', initGame);
 
 // Start the game
 initGame();
