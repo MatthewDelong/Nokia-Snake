@@ -8,8 +8,9 @@ const restartBtn = document.getElementById('restartBtn');
 // Set canvas size based on device
 function setCanvasSize() {
     const maxSize = Math.min(window.innerWidth - 40, 400);
-    canvas.width = maxSize;
-    canvas.height = maxSize;
+    const adjustedSize = Math.floor(maxSize / gridSize) * gridSize;
+    canvas.width = adjustedSize;
+    canvas.height = adjustedSize;
 }
 
 const gridSize = 20;
@@ -20,6 +21,27 @@ let food = {};
 let direction = { x: 0, y: 0 };
 let score = 0;
 let gameRunning = true;
+let highScore = 0;
+
+// Load high score from localStorage
+function loadHighScore() {
+    const savedHighScore = localStorage.getItem('nokiaSnakeHighScore');
+    highScore = savedHighScore ? parseInt(savedHighScore) : 0;
+    updateHighScoreDisplay();
+}
+
+// Save high score to localStorage
+function saveHighScore() {
+    localStorage.setItem('nokiaSnakeHighScore', highScore);
+}
+
+// Update high score display
+function updateHighScoreDisplay() {
+    const highScoreElement = document.getElementById('highScore');
+    if (highScoreElement) {
+        highScoreElement.textContent = highScore;
+    }
+}
 
 function initGame() {
     setCanvasSize();
@@ -64,7 +86,7 @@ function gameLoop() {
     
     update();
     draw();
-    setTimeout(gameLoop, 150); // Slightly slower for mobile
+    setTimeout(gameLoop, 150);
 }
 
 function update() {
@@ -73,14 +95,22 @@ function update() {
     head.x += direction.x;
     head.y += direction.y;
     
-    // Wrap around walls
-    if (head.x < 0) head.x = tileCount - 1;
-    if (head.x >= tileCount) head.x = 0;
-    if (head.y < 0) head.y = tileCount - 1;
-    if (head.y >= tileCount) head.y = 0;
+    // Wall collision detection
+    head.x = Math.floor(head.x);
+    head.y = Math.floor(head.y);
+    
+    if (head.x < 0) head.x = Math.floor(tileCount) - 1;
+    if (head.x >= Math.floor(tileCount)) head.x = 0;
+    if (head.y < 0) head.y = Math.floor(tileCount) - 1;
+    if (head.y >= Math.floor(tileCount)) head.y = 0;
     
     // Check self collision
-    if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+    const hasCollision = snake.some(segment => 
+        Math.floor(segment.x) === Math.floor(head.x) && 
+        Math.floor(segment.y) === Math.floor(head.y)
+    );
+    
+    if (hasCollision) {
         endGame();
         return;
     }
@@ -88,7 +118,7 @@ function update() {
     snake.unshift(head);
     
     // Check food collision
-    if (head.x === food.x && head.y === food.y) {
+    if (Math.floor(head.x) === Math.floor(food.x) && Math.floor(head.y) === Math.floor(food.y)) {
         score += 10;
         scoreElement.textContent = score;
         createFood();
@@ -98,27 +128,39 @@ function update() {
 }
 
 function draw() {
-    // Clear canvas
+    // Clear canvas with solid background
     ctx.fillStyle = '#0f1123';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw snake with responsive size
+    // Draw snake
     const cellSize = canvas.width / tileCount;
     ctx.fillStyle = '#83d46c';
-    snake.forEach((segment, index) => {
-        const size = cellSize - 2;
-        ctx.fillRect(segment.x * cellSize, segment.y * cellSize, size, size);
+    snake.forEach((segment) => {
+        const size = Math.floor(cellSize) - 2;
+        const x = Math.floor(segment.x * cellSize);
+        const y = Math.floor(segment.y * cellSize);
+        ctx.fillRect(x, y, size, size);
     });
     
     // Draw food
     ctx.fillStyle = '#ff4444';
-    const foodSize = cellSize - 2;
-    ctx.fillRect(food.x * cellSize, food.y * cellSize, foodSize, foodSize);
+    const foodSize = Math.floor(cellSize) - 2;
+    const foodX = Math.floor(food.x * cellSize);
+    const foodY = Math.floor(food.y * cellSize);
+    ctx.fillRect(foodX, foodY, foodSize, foodSize);
 }
 
 function endGame() {
     gameRunning = false;
     finalScoreElement.textContent = score;
+    
+    // Check for new high score
+    if (score > highScore) {
+        highScore = score;
+        saveHighScore();
+        updateHighScoreDisplay();
+    }
+    
     gameOverElement.style.display = 'block';
 }
 
@@ -167,33 +209,33 @@ canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
 });
 
-canvas.addEventListener('touchmove', (e) => {
+canvas.addEventListener('touchend', (e) => {
     if (!touchStartX || !touchStartY) return;
     
-    const touchEndX = e.touches[0].clientX;
-    const touchEndY = e.touches[0].clientY;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
     
     const diffX = touchStartX - touchEndX;
     const diffY = touchStartY - touchEndY;
     
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-        // Horizontal swipe
-        if (diffX > 0) {
-            changeDirection('left');
+    if (Math.abs(diffX) > 30 || Math.abs(diffY) > 30) {
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (diffX > 0) {
+                changeDirection('left');
+            } else {
+                changeDirection('right');
+            }
         } else {
-            changeDirection('right');
-        }
-    } else {
-        // Vertical swipe
-        if (diffY > 0) {
-            changeDirection('up');
-        } else {
-            changeDirection('down');
+            if (diffY > 0) {
+                changeDirection('up');
+            } else {
+                changeDirection('down');
+            }
         }
     }
     
-    touchStartX = null;
-    touchStartY = null;
+    touchStartX = 0;
+    touchStartY = 0;
     e.preventDefault();
 });
 
@@ -205,6 +247,9 @@ restartBtn.addEventListener('click', () => {
 
 // Handle window resize
 window.addEventListener('resize', initGame);
+
+// Load high score when game starts
+loadHighScore();
 
 // Start the game
 initGame();
